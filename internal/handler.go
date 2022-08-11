@@ -112,13 +112,6 @@ func (h *Handler) ImportMenu(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) CatalogImportCallback(w http.ResponseWriter, r *http.Request) {
 
-	// get catalogImportCallback from url
-	vars := mux.Vars(r)
-	catalogImportCallback := vars["catalogImportCallback"]
-
-	//log catalogImportCallback
-	log.Printf("catalogImportCallback: %s", catalogImportCallback)
-
 	// parse body to catalogimport
 	catalogImport := &requests.CatalogImportRequest{}
 	if err := json.NewDecoder(r.Body).Decode(catalogImport); err != nil {
