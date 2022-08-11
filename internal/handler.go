@@ -132,3 +132,39 @@ func (h *Handler) ImportMenu(w http.ResponseWriter, r *http.Request) {
 	// log request
 	log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
 }
+
+func (h *Handler) CatalogImportCallback(w http.ResponseWriter, r *http.Request) {
+
+	// get catalogImportCallback from url
+	vars := mux.Vars(r)
+	catalogImportCallback := vars["catalogImportCallback"]
+
+	//log catalogImportCallback
+	log.Printf("catalogImportCallback: %s", catalogImportCallback)
+
+	// get auth token from header
+	authToken := r.Header.Get("Authorization")
+	if authToken == "" {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write(response.CreateAErrorResponse("missing auth token"))
+		return
+	}
+
+	// parse body to catalogimport
+	catalogImport := &requests.CatalogImportRequest{}
+	if err := json.NewDecoder(r.Body).Decode(catalogImport); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		// create a response
+		response := response.CreateAErrorResponse("invalid request body")
+		w.Write(response)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+
+	// write request body to log in json
+	log.Printf("payload: %s", catalogImport)
+
+	// log request
+	log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
+}
