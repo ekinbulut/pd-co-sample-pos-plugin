@@ -109,3 +109,26 @@ func (h *Handler) UpdateOrderStatus(w http.ResponseWriter, r *http.Request) {
 	// log request body json
 	log.Printf("%s", orderStatus)
 }
+
+// create a menu import endpoint
+func (h *Handler) ImportMenu(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	// read params from url
+	vars := mux.Vars(r)
+	remoteId := vars["remoteId"]
+
+	// log remoteId
+	log.Printf("update menu import remoteid: %s", remoteId)
+
+	// get auth token from header
+	authToken := r.Header.Get("Authorization")
+	if authToken == "" {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write(response.CreateAErrorResponse("missing auth token"))
+		return
+	}
+	// log request
+	log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
+}
