@@ -49,6 +49,22 @@ func (h *Handler) Order(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	switch order.ExpeditionType {
+	case "delivery":
+		log.Printf("Delivery type: %s", "delivery")
+	case "pickup":
+		if order.Delivery.RiderPickupTime.IsZero() {
+			log.Printf("Delivery type: %s", "VENDOR_DELIVERY")
+
+		} else {
+			log.Printf("Delivery type: %s", "OWN_DELIVERY")
+		}
+	default:
+		w.WriteHeader(http.StatusBadRequest)
+		response := response.CreateAErrorResponse("invalid expedition type")
+		w.Write(response)
+	}
+
 	response := response.CreateResponse(remoteId)
 	w.Write(response)
 
