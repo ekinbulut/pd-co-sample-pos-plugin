@@ -31,14 +31,6 @@ func (h *Handler) Order(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	remoteId := vars["remoteId"]
 
-	// get auth token from header
-	authToken := r.Header.Get("Authorization")
-	if authToken == "" {
-		w.WriteHeader(http.StatusNotFound)
-		w.Write(response.CreateAErrorResponse("missing auth token"))
-		return
-	}
-
 	// if remoteId is empty, return error
 	if remoteId == "" {
 		response := response.CreateAErrorResponse("remote_id is empty")
@@ -70,14 +62,6 @@ func (h *Handler) UpdateOrderStatus(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	remoteId := vars["remoteId"]
 	remoteOrderId := vars["remoteOrderId"]
-
-	// get auth token from header
-	authToken := r.Header.Get("Authorization")
-	if authToken == "" {
-		w.WriteHeader(http.StatusUnauthorized)
-		w.Write(response.CreateAErrorResponse("missing auth token"))
-		return
-	}
 
 	// if remoteId is empty, return error
 	if remoteId == "" {
@@ -122,13 +106,6 @@ func (h *Handler) ImportMenu(w http.ResponseWriter, r *http.Request) {
 	// log remoteId
 	log.Printf("update menu import remoteid: %s", remoteId)
 
-	// get auth token from header
-	authToken := r.Header.Get("Authorization")
-	if authToken == "" {
-		w.WriteHeader(http.StatusUnauthorized)
-		w.Write(response.CreateAErrorResponse("missing auth token"))
-		return
-	}
 	// log request
 	log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
 }
@@ -141,14 +118,6 @@ func (h *Handler) CatalogImportCallback(w http.ResponseWriter, r *http.Request) 
 
 	//log catalogImportCallback
 	log.Printf("catalogImportCallback: %s", catalogImportCallback)
-
-	// get auth token from header
-	authToken := r.Header.Get("Authorization")
-	if authToken == "" {
-		w.WriteHeader(http.StatusUnauthorized)
-		w.Write(response.CreateAErrorResponse("missing auth token"))
-		return
-	}
 
 	// parse body to catalogimport
 	catalogImport := &requests.CatalogImportRequest{}

@@ -38,6 +38,7 @@ func (s *Server) Start() error {
 	s.router.HandleFunc("/remoteId/{remoteId}/remoteOrder/{remoteOrderId}/posOrderStatus", s.handler.UpdateOrderStatus).Methods("PUT")
 	s.router.HandleFunc("/menuimport/{remoteId}", s.handler.ImportMenu).Methods("GET")
 	s.router.HandleFunc("/{catalogImportCallback}", s.handler.CatalogImportCallback).Methods("POST")
+	s.router.Use(internal.AuthMiddleware)
 
 	// listen and serve
 	log.Println("Server listening on: http://localhost:8080")
