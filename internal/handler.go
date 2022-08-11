@@ -31,6 +31,14 @@ func (h *Handler) Order(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	remoteId := vars["remoteId"]
 
+	// get auth token from header
+	authToken := r.Header.Get("Authorization")
+	if authToken == "" {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write(response.CreateAErrorResponse("missing auth token"))
+		return
+	}
+
 	// if remoteId is empty, return error
 	if remoteId == "" {
 		response := response.CreateAErrorResponse("remote_id is empty")
