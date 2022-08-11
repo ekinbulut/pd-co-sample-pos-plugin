@@ -63,3 +63,49 @@ func (h *Handler) Order(w http.ResponseWriter, r *http.Request) {
 	// log request
 	log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
 }
+
+func (h *Handler) UpdateOrderStatus(w http.ResponseWriter, r *http.Request) {
+
+	//get remoteId and remoteOrderId from url
+	vars := mux.Vars(r)
+	remoteId := vars["remoteId"]
+	remoteOrderId := vars["remoteOrderId"]
+
+	// get auth token from header
+	authToken := r.Header.Get("Authorization")
+	if authToken == "" {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write(response.CreateAErrorResponse("missing auth token"))
+		return
+	}
+
+	// if remoteId is empty, return error
+	if remoteId == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		response := response.CreateAErrorResponse("remote_id is empty")
+		w.Write(response)
+		return
+	}
+	// if remoteOrderId is empty, return error
+	if remoteOrderId == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		response := response.CreateAErrorResponse("remote_order_id is empty")
+		w.Write(response)
+		return
+	}
+
+	// convert body to order status
+	orderStatus := &requests.OrderStatus{}
+	if err := json.NewDecoder(r.Body).Decode(orderStatus); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		// create a response
+		response := response.CreateAErrorResponse("invalid request body")
+		w.Write(response)
+		return
+	}
+
+	// log request
+	log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
+	// log request body json
+	log.Printf("%s", orderStatus)
+}

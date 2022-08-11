@@ -28,6 +28,7 @@ func (s *Server) Start() error {
 
 	s.router.HandleFunc("/v1/health", s.handler.HealthCheck)
 	s.router.HandleFunc("/order/{remoteId}", s.handler.Order).Methods("POST")
+	s.router.HandleFunc("/remoteId/{remoteId}/remoteOrder/{remoteOrderId}/posOrderStatus", s.handler.UpdateOrderStatus).Methods("PUT")
 
 	// listen and serve
 	log.Println("Server listening on: http://localhost:8080")
