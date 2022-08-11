@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"log"
 	"net/http"
 	"pos-plugin/internal/response"
 )
@@ -14,6 +15,10 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			w.Write(response.CreateAErrorResponse("missing auth token"))
 			return
 		}
+
+		// log auth token
+		log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
+		log.Printf("auth token: %s", authToken)
 
 		next.ServeHTTP(w, r)
 	})
